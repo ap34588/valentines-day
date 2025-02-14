@@ -166,14 +166,35 @@
         { question: "Where in Philly did we have our first moment?", options: ["Beach", "Mall Arcade", "Morgan's Pier", "Barnes and Nobles"], correct: 2 },
         { question: "What did we eat at Redding Market first?", options: ["Philly Sammich", "Crepe", "Fish", "Bagel"], correct: 1 },
         { question: "Where did we go eat after our first day of snowboarding?", options: ["Moes", "Chili's", "Wendy's", "Dominos"], correct: 0 },
-        { question: "Which movie did we watch together first?", options: ["Rab Ne Bana Di Jodi", "How to lose a guy in 10 days", "Hum Tum", "I hate Luv Story's"], correct: 0 },
-        { question: "What arcade game did we play the most in Philly?", options: ["Bowling", "Hunting Season", "Dance Dance", "Soccer"], correct: 2 },
-        { question: "What bar did we go but forget to take a picture at?", options: ["Morgan's Pier", "Insomnia", "Barcade", "Barstool"], correct: 3 },
-        { question: "Where should we go on our next date?", options: ["Beach", "Mountains", "Disneyland", "City"], correct: 0 }, 
-        { question: "Do you like Aryan?", options: ["A lot a lot", "Yes", "A lot", "no:("], correct: 0 }
+        { question: "Which movie did we watch together first?", options: ["Rab Ne Bana Di Jodi", "How to lose a guy in 10 days", "Hum Tum", "I hate Luv Story's"], correct: 0 }
     ];
 
     let currentQuestionIndex = 0;
+
+    function startQuiz() {
+        valentineContainer.style.display = "none";
+        quizContainer.style.display = "flex";
+        loadQuestion();
+    }
+
+    function loadQuestion() {
+        if (currentQuestionIndex >= questions.length) {
+            quizContainer.style.display = "none";
+            loveLetterContainer.style.display = "flex";
+            return;
+        }
+        document.body.style.backgroundImage = `url('${bgImages[currentQuestionIndex]}')`;
+        questionText.innerText = questions[currentQuestionIndex].question;
+        optionsContainer.innerHTML = "";
+        questions[currentQuestionIndex].options.forEach((option, index) => {
+            const button = document.createElement("button");
+            button.classList.add("option");
+            button.innerText = option;
+            button.onclick = () => checkAnswer(index);
+            optionsContainer.appendChild(button);
+        });
+    }
+
     function checkAnswer(selectedIndex) {
         if (selectedIndex === questions[currentQuestionIndex].correct) {
             currentQuestionIndex++;
