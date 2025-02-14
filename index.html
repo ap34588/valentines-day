@@ -109,14 +109,13 @@
       <img id="imageDisplay" src="image1.gif" alt="Cute couple" class="rounded-md h-[300px] max-w-full" style="object-fit: cover;" />
       <h2 id="valentineQuestion" class="text-4xl font-bold italic text-[#bd1e59] my-4 text-center">Will you be my Valentine?</h2>
       <div class="flex gap-4 pt-[20px] items-center">
-        <button id="yesButton" class="inline-flex items-center justify-center rounded-md text-[20px] font-medium bg-gray-400 text-white px-4 py-2 cursor-not-allowed" disabled>
-          Yes (Waiting...)
+        <button id="yesButton" class="inline-flex items-center justify-center rounded-md text-[20px] font-medium bg-green-500 text-white px-4 py-2 hover:bg-green-400">
+          Yes
         </button>
         <button id="noButton" class="inline-flex items-center justify-center rounded-md text-[20px] font-medium bg-red-500 text-white px-4 py-2 hover:bg-red-700">
           No
         </button>
       </div>
-      <p id="countdown-timer" class="text-lg text-[#bd1e59] mt-4"></p>
     </div>
   </div>
 
@@ -134,7 +133,6 @@
     const quizContainer = document.getElementById('quiz-container');
     const questionText = document.getElementById('question-text');
     const optionsContainer = document.getElementById('options-container');
-    const countdownTimer = document.getElementById('countdown-timer');
     const heartContainer = document.getElementById("heart-container");
 
     const bgImages = [
@@ -156,31 +154,47 @@
         { question: "Do you like Aryan?", options: ["A lot a lot", "Yes", "A lot", "no:("], correct: 0 }
     ];
 
-    function updateCountdown() {
-        const now = new Date();
-        const midnight = new Date();
-        midnight.setHours(24, 0, 0, 0);
+    let currentQuestionIndex = 0;
 
-        const timeDiff = midnight - now;
+    function startQuiz() {
+        valentineContainer.classList.add("fade-out");
+        setTimeout(() => {
+            valentineContainer.style.display = "none";
+            quizContainer.style.display = "flex";
+            heartContainer.style.display = "none";
+            loadQuestion();
+        }, 500);
+    }
 
-        if (timeDiff > 0) {
-            const hours = Math.floor(timeDiff / (1000 * 60 * 60));
-            const minutes = Math.floor((timeDiff % (1000 * 60 * 60)) / (1000 * 60));
-            const seconds = Math.floor((timeDiff % (1000 * 60)) / 1000);
+    function loadQuestion() {
+        if (currentQuestionIndex >= questions.length) return;
+        document.body.style.backgroundImage = `url('${bgImages[currentQuestionIndex]}')`;
+        const questionObj = questions[currentQuestionIndex];
+        questionText.innerText = questionObj.question;
+        optionsContainer.innerHTML = "";
+        questionObj.options.forEach((option, index) => {
+            const button = document.createElement("button");
+            button.classList.add("option");
+            button.innerText = option;
+            button.onclick = () => checkAnswer(index);
+            optionsContainer.appendChild(button);
+        });
+    }
 
-            countdownTimer.innerText = `Time left: ${hours}h ${minutes}m ${seconds}s`;
-            yesButton.disabled = true;
-            setTimeout(updateCountdown, 1000);
+    function checkAnswer(selectedIndex) {
+        if (selectedIndex === questions[currentQuestionIndex].correct) {
+            currentQuestionIndex++;
+            if (currentQuestionIndex === questions.length) {
+                window.location.href = "https://egft.in/uFmx3YQjfFSsiCH";
+            } else {
+                loadQuestion();
+            }
         } else {
-            yesButton.innerText = "Yes";
-            yesButton.disabled = false;
-            yesButton.classList.remove("cursor-not-allowed", "bg-gray-400");
-            yesButton.classList.add("bg-green-500", "hover:bg-green-400");
-            yesButton.addEventListener("click", startQuiz);
+            alert("Oops! Try again 💔");
         }
     }
 
-    updateCountdown();
+    yesButton.addEventListener("click", startQuiz);
   </script>
 </body>
 </html>
