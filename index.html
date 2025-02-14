@@ -67,41 +67,44 @@
       background-color: #ff4081;
     }
 
-    /* Raining Hearts Effect */
-    .heart-container {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
+    /* Love Letter Styling */
+    #love-letter-container {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
       height: 100vh;
-      overflow: hidden;
-      pointer-events: none;
+      text-align: center;
+      background: url('love_background.jpeg') no-repeat center center fixed;
+      background-size: cover;
+      color: white;
     }
 
-    .heart {
-      position: absolute;
-      color: red;
+    #love-letter {
+      background: rgba(255, 192, 203, 0.9);
+      padding: 20px;
+      border-radius: 10px;
+      max-width: 600px;
       font-size: 20px;
-      opacity: 0.8;
-      animation: fall linear infinite;
+      box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
     }
 
-    @keyframes fall {
-      from {
-        transform: translateY(-100vh);
-        opacity: 1;
-      }
-      to {
-        transform: translateY(100vh);
-        opacity: 0;
-      }
+    #continue-button {
+      margin-top: 20px;
+      background-color: #ff80ab;
+      padding: 10px 20px;
+      border-radius: 5px;
+      color: white;
+      text-decoration: none;
+      font-size: 18px;
+    }
+
+    #continue-button:hover {
+      background-color: #ff4081;
     }
   </style>
 </head>
 <body>
-  <!-- Raining Hearts Effect -->
-  <div id="heart-container" class="heart-container"></div>
-
   <!-- Initial Valentine's Page -->
   <div id="valentine-container" class="flex flex-col items-center justify-center h-screen">
     <div class="flex flex-col items-center p-4">
@@ -110,9 +113,6 @@
       <div class="flex gap-4 pt-[20px] items-center">
         <button id="yesButton" class="inline-flex items-center justify-center rounded-md text-[20px] font-medium bg-green-500 text-white px-4 py-2 hover:bg-green-400">
           Yes
-        </button>
-        <button id="noButton" class="inline-flex items-center justify-center rounded-md text-[20px] font-medium bg-red-500 text-white px-4 py-2 hover:bg-red-700">
-          No
         </button>
       </div>
     </div>
@@ -126,24 +126,37 @@
     </div>
   </div>
 
+  <!-- Love Letter Container -->
+  <div id="love-letter-container" class="hidden flex items-center justify-center">
+    <div id="love-letter">
+      <h2 class="text-3xl font-bold">Dear My Love,</h2>
+      <p class="mt-4">
+        From the moment we met, I knew you were someone special and that you could make me happy. 
+        Every memory we have made together is a piece of a beautiful story, and I can’t wait to create many more chapters with you.
+        You are my greatest adventure, and I know we can make this work. ❤️
+      </p>
+      <p class="mt-4">
+        I will always cherish every moment with you, support your dreams, and care for you endlessly.
+        Thank you for being such a wonderful person in my life. I like you more than you can imagine. 💕
+      </p>
+      <a id="continue-button" href="https://egft.in/uFmx3YQjfFSsiCH">Continue</a>
+    </div>
+  </div>
+
   <script>
     const yesButton = document.getElementById('yesButton');
-    const noButton = document.getElementById('noButton');
     const valentineContainer = document.getElementById('valentine-container');
     const quizContainer = document.getElementById('quiz-container');
-    const questionBox = document.getElementById('question-box');
+    const loveLetterContainer = document.getElementById('love-letter-container');
     const questionText = document.getElementById('question-text');
     const optionsContainer = document.getElementById('options-container');
-    const heartContainer = document.getElementById("heart-container");
 
-    // Background Images for Questions
     const bgImages = [
         "Img1.jpeg", "Img2.jpeg", "Img3.jpeg", "Img4.jpeg",
         "Img5.jpeg", "Img6.jpeg", "Img7.jpeg", "Img8.jpeg",
         "Img9.jpeg", "Img10.jpeg"
     ];
 
-    // Quiz Questions
     const questions = [
         { question: "Where did we first meet?", options: ["Philly", "D.C.", "Boston", "Chicago"], correct: 0 },
         { question: "Where did we eat first?", options: ["La Llorona", "Malooga's", "Walnut Cafe", "Prunella"], correct: 0 },
@@ -160,67 +173,38 @@
     let currentQuestionIndex = 0;
 
     function startQuiz() {
-        valentineContainer.classList.add("fade-out");
-        setTimeout(() => {
-            valentineContainer.style.display = "none";
-            quizContainer.style.display = "flex";
-            heartContainer.style.display = "none"; // Stop hearts when quiz starts
-            loadQuestion();
-        }, 500);
+        valentineContainer.style.display = "none";
+        quizContainer.style.display = "flex";
+        loadQuestion();
     }
 
     function loadQuestion() {
-        if (currentQuestionIndex >= questions.length) return;
+        if (currentQuestionIndex >= questions.length) {
+            quizContainer.style.display = "none";
+            loveLetterContainer.style.display = "flex";
+            return;
+        }
         document.body.style.backgroundImage = `url('${bgImages[currentQuestionIndex]}')`;
-
-        const questionObj = questions[currentQuestionIndex];
-        questionText.innerText = questionObj.question;
+        questionText.innerText = questions[currentQuestionIndex].question;
         optionsContainer.innerHTML = "";
 
-        questionObj.options.forEach((option, index) => {
+        questions[currentQuestionIndex].options.forEach((option, index) => {
             const button = document.createElement("button");
             button.classList.add("option");
             button.innerText = option;
             button.onclick = () => checkAnswer(index);
             optionsContainer.appendChild(button);
         });
-
-        questionBox.classList.add("fade-in");
     }
 
     function checkAnswer(selectedIndex) {
         if (selectedIndex === questions[currentQuestionIndex].correct) {
-            questionBox.classList.add("fade-out");
-
-            setTimeout(() => {
-                currentQuestionIndex++;
-
-                if (currentQuestionIndex === questions.length) {
-                    window.location.href = "https://egft.in/uFmx3YQjfFSsiCH";
-                } else {
-                    questionBox.classList.remove("fade-out");
-                    loadQuestion();
-                }
-            }, 500);
+            currentQuestionIndex++;
+            loadQuestion();
         } else {
             alert("Oops! Try again 💔");
         }
     }
-
-    function createHeart() {
-        const heart = document.createElement("div");
-        heart.classList.add("heart");
-        heart.innerHTML = "❤️";
-        heart.style.left = Math.random() * 100 + "vw";
-        heart.style.animationDuration = Math.random() * 2 + 3 + "s";
-        heartContainer.appendChild(heart);
-
-        setTimeout(() => {
-            heart.remove();
-        }, 5000);
-    }
-
-    setInterval(createHeart, 300);
 
     yesButton.addEventListener("click", startQuiz);
   </script>
