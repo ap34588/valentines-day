@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Valentine's Day Quiz</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    /* Default Background */
+    body {
+      background: url('Images/image1.jpeg') no-repeat center center fixed;
+      background-size: cover;
+      transition: background-image 0.5s ease-in-out;
+    }
+
+    .fade-in {
+      opacity: 0;
+      animation: fadeIn 0.5s ease-in forwards;
+    }
+
+    .fade-out {
+      opacity: 1;
+      animation: fadeOut 0.5s ease-out forwards;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    @keyframes fadeOut {
+      from { opacity: 1; }
+      to { opacity: 0; }
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    /* Centered Quiz Box */
+    .question-box {
+      background-color: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+      text-align: center;
+      width: 90%;
+      max-width: 500px;
+      margin: auto;
+      border: 8px solid #ff80ab;
+    }
+
+    .option {
+      display: block;
+      margin: 10px auto;
+      padding: 10px;
+      width: 80%;
+      background-color: #ff80ab;
+      color: white;
+      border: none;
+      cursor: pointer;
+      border-radius: 5px;
+      transition: 0.3s;
+    }
+
+    .option:hover {
+      background-color: #ff4081;
+    }
+
+    /* Raining Hearts Effect */
+    .heart-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100vh;
+      overflow: hidden;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .heart {
+      position: absolute;
+      color: red;
+      font-size: 20px;
+      opacity: 0.8;
+      animation: fall linear infinite;
+    }
+
+    @keyframes fall {
+      from {
+        transform: translateY(-100vh);
+        opacity: 1;
+      }
+      to {
+        transform: translateY(100vh);
+        opacity: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Raining Hearts Effect -->
+  <div id="heart-container" class="heart-container"></div>
+
+  <!-- Initial Valentine's Page -->
+  <div id="valentine-container" class="flex flex-col items-center justify-center h-screen">
+    <div class="flex flex-col items-center p-4">
+      <img id="imageDisplay" src="Images/image1.gif" alt="Cute couple" class="rounded-md h-[300px] max-w-full" style="object-fit: cover;" />
+      <h2 id="valentineQuestion" class="text-4xl font-bold italic text-[#bd1e59] my-4 text-center">Will you be my Valentine?</h2>
+      <div class="flex gap-4 pt-[20px] items-center">
+        <button id="yesButton" class="inline-flex items-center justify-center rounded-md text-[20px] font-medium bg-gray-400 text-white px-4 py-2 cursor-not-allowed" disabled>
+          Yes (Waiting...)
+        </button>
+        <button id="noButton" class="inline-flex items-center justify-center rounded-md text-[20px] font-medium bg-red-500 text-white px-4 py-2 hover:bg-red-700">
+          No
+        </button>
+      </div>
+      <p id="countdown-timer" class="text-lg text-[#bd1e59] mt-4"></p>
+    </div>
+  </div>
+
+  <!-- Quiz Container -->
+  <div id="quiz-container" class="hidden flex items-center justify-center h-screen">
+    <div id="question-box" class="question-box fade-in">
+      <h2 id="question-text" class="text-2xl font-bold text-[#bd1e59]"></h2>
+      <div id="options-container"></div>
+    </div>
+  </div>
+
+  <script>
+    const yesButton = document.getElementById('yesButton');
+    const valentineContainer = document.getElementById('valentine-container');
+    const quizContainer = document.getElementById('quiz-container');
+    const questionText = document.getElementById('question-text');
+    const optionsContainer = document.getElementById('options-container');
+    const countdownTimer = document.getElementById('countdown-timer');
+    const heartContainer = document.getElementById("heart-container");
+
+    const bgImages = [
+        "Images/Img1.jpeg", "Images/Img2.jpeg", "Images/Img3.jpeg", "Images/Img4.jpeg",
+        "Images/Img5.jpeg", "Images/Img6.jpeg", "Images/Img7.jpeg", "Images/Img8.jpeg",
+        "Images/Img9.jpeg", "Images/Img10.jpeg"
+    ];
+
+    const questions = [
+        { question: "Where did we first meet?", options: ["Philly", "D.C.", "Boston", "Chicago"], correct: 0 },
+        { question: "Where did we eat first?", options: ["La Llorona", "Malooga's", "Walnut Cafe", "Prunella"], correct: 0 },
+        { question: "Where in Philly did we have our first moment?", options: ["Beach", "Mall Arcade", "Morgan's Pier", "Barnes and Nobles"], correct: 2 },
+        { question: "What did we eat at Redding Market first?", options: ["Philly Sammich", "Crepe", "Fish", "Bagel"], correct: 1 },
+        { question: "Where did we go eat after our first day of snowboarding?", options: ["Moes", "Chili's", "Wendy's", "Dominos"], correct: 0 },
+        { question: "Which movie did we watch together first?", options: ["Rab Ne Bana Di Jodi", "How to lose a guy in 10 days", "Hum Tum", "I hate Luv Story's"], correct: 0 },
+        { question: "What arcade game did we play the most in Philly?", options: ["Bowling", "Hunting Season", "Dance Dance", "Soccer"], correct: 2 },
+        { question: "What bar did we go but forget to take a picture at?", options: ["Morgan's Pier", "Insomnia", "Barcade", "Barstool"], correct: 3 },
+        { question: "Where should we go on our next date?", options: ["Beach", "Mountains", "Disneyland", "City"], correct: 0 }, 
+        { question: "Do you like Aryan?", options: ["A lot a lot", "Yes", "A lot", "no:("], correct: 0 }
+    ];
+
+    let currentQuestionIndex = 0;
+
+    function startQuiz() {
+        valentineContainer.classList.add("fade-out");
+        setTimeout(() => {
+            valentineContainer.style.display = "none";
+            quizContainer.style.display = "flex";
+            heartContainer.style.display = "none";
+            loadQuestion();
+        }, 500);
+    }
+
+    function loadQuestion() {
+        if (currentQuestionIndex >= questions.length) return;
+        document.body.style.backgroundImage = `url('${bgImages[currentQuestionIndex]}')`;
+        const questionObj = questions[currentQuestionIndex];
+        questionText.innerText = questionObj.question;
+        optionsContainer.innerHTML = "";
+        questionObj.options.forEach((option, index) => {
+            const button = document.createElement("button");
+            button.classList.add("option");
+            button.innerText = option;
+            button.onclick = () => checkAnswer(index);
+            optionsContainer.appendChild(button);
+        });
+    }
+
+    function checkAnswer(selectedIndex) {
+        if (selectedIndex === questions[currentQuestionIndex].correct) {
+            currentQuestionIndex++;
+            if (currentQuestionIndex === questions.length) {
+                window.location.href = "https://egft.in/uFmx3YQjfFSsiCH";
+            } else {
+                loadQuestion();
+            }
+        } else {
+            alert("Oops! Try again 💔");
+        }
+    }
+
+    setInterval(() => {
+        const heart = document.createElement("div");
+        heart.classList.add("heart");
+        heart.innerHTML = "❤️";
+        heart.style.left = Math.random() * 100 + "vw";
+        heart.style.animationDuration = Math.random() * 2 + 3 + "s";
+        heartContainer.appendChild(heart);
+        setTimeout(() => heart.remove(), 5000);
+    }, 300);
+  </script>
+</body>
+</html>
