@@ -37,7 +37,7 @@
       display: none;
     }
 
-    /* Centered Quiz Box with Pink Border */
+    /* Centered Quiz Box */
     .question-box {
       background-color: white;
       padding: 20px;
@@ -48,6 +48,7 @@
       max-width: 500px;
       margin: auto;
       border: 8px solid #ff80ab;
+      transition: opacity 0.5s ease-in-out;
     }
 
     .option {
@@ -148,6 +149,7 @@
     const valentineContainer = document.getElementById('valentine-container');
     const quizContainer = document.getElementById('quiz-container');
     const loveLetterContainer = document.getElementById('love-letter-container');
+    const questionBox = document.getElementById('question-box');
     const questionText = document.getElementById('question-text');
     const optionsContainer = document.getElementById('options-container');
 
@@ -169,7 +171,6 @@
         { question: "Where should we go on our next date?", options: ["Beach", "Mountains", "Disneyland", "City"], correct: 0 }, 
         { question: "Do you like Aryan?", options: ["A lot a lot", "Yes", "A lot", "no:("], correct: 0 }
     ];
-
     let currentQuestionIndex = 0;
 
     function startQuiz() {
@@ -185,6 +186,7 @@
             return;
         }
         document.body.style.backgroundImage = `url('${bgImages[currentQuestionIndex]}')`;
+        questionBox.style.opacity = "1";
         questionText.innerText = questions[currentQuestionIndex].question;
         optionsContainer.innerHTML = "";
 
@@ -199,8 +201,11 @@
 
     function checkAnswer(selectedIndex) {
         if (selectedIndex === questions[currentQuestionIndex].correct) {
-            currentQuestionIndex++;
-            loadQuestion();
+            questionBox.style.opacity = "0";
+            setTimeout(() => {
+                currentQuestionIndex++;
+                loadQuestion();
+            }, 1000);
         } else {
             alert("Oops! Try again 💔");
         }
