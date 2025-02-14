@@ -37,7 +37,7 @@
       display: none;
     }
 
-    /* Centered Quiz Box */
+    /* Centered Quiz Box with Pink Border */
     .question-box {
       background-color: white;
       padding: 20px;
@@ -67,6 +67,36 @@
       background-color: #ff4081;
     }
 
+    /* Raining Hearts Effect */
+    .heart-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100vh;
+      overflow: hidden;
+      pointer-events: none;
+    }
+
+    .heart {
+      position: absolute;
+      color: red;
+      font-size: 20px;
+      opacity: 0.8;
+      animation: fall linear infinite;
+    }
+
+    @keyframes fall {
+      from {
+        transform: translateY(-100vh);
+        opacity: 1;
+      }
+      to {
+        transform: translateY(100vh);
+        opacity: 0;
+      }
+    }
+
     /* Love Letter Styling */
     #love-letter-container {
       display: none;
@@ -75,7 +105,7 @@
       justify-content: center;
       height: 100vh;
       text-align: center;
-      background: url('love_background.jpeg') no-repeat center center fixed;
+      background: url('Images/love_background.jpeg') no-repeat center center fixed;
       background-size: cover;
       color: white;
     }
@@ -105,6 +135,9 @@
   </style>
 </head>
 <body>
+  <!-- Raining Hearts Effect -->
+  <div id="heart-container" class="heart-container"></div>
+
   <!-- Initial Valentine's Page -->
   <div id="valentine-container" class="flex flex-col items-center justify-center h-screen">
     <div class="flex flex-col items-center p-4">
@@ -113,9 +146,6 @@
       <div class="flex gap-4 pt-[20px] items-center">
         <button id="yesButton" class="inline-flex items-center justify-center rounded-md text-[20px] font-medium bg-green-500 text-white px-4 py-2 hover:bg-green-400">
           Yes
-        </button>
-        <button id="noButton" class="inline-flex items-center justify-center rounded-md text-[20px] font-medium bg-red-500 text-white px-4 py-2 hover:bg-red-700">
-          No
         </button>
       </div>
     </div>
@@ -134,13 +164,10 @@
     <div id="love-letter">
       <h2 class="text-3xl font-bold">Dear My Love,</h2>
       <p class="mt-4">
-        From the moment we met, I knew you were someone special and that you could make me happy. 
-        Every memory we have made together is a piece of a beautiful story, and I can’t wait to create many more chapters with you.
-        You are my greatest adventure Aashi and I know we can make this work. ❤️
+        Every moment with you has been magical. I cherish every memory we've made together, and I can’t wait for all the new ones ahead.
       </p>
       <p class="mt-4">
-        I will always cherish every moment with you, support your dreams, and care for you endlessly.
-        Thank you for being such a wonderful person in my life. I like you more than you can imagine. 💕
+        You are my greatest adventure, and I know we can make this work. ❤️
       </p>
       <a id="continue-button" href="https://egft.in/uFmx3YQjfFSsiCH">Continue</a>
     </div>
@@ -153,6 +180,7 @@
     const loveLetterContainer = document.getElementById('love-letter-container');
     const questionText = document.getElementById('question-text');
     const optionsContainer = document.getElementById('options-container');
+    const heartContainer = document.getElementById("heart-container");
 
     const bgImages = [
         "Img1.jpeg", "Img2.jpeg", "Img3.jpeg", "Img4.jpeg",
@@ -165,16 +193,19 @@
         { question: "Where did we eat first?", options: ["La Llorona", "Malooga's", "Walnut Cafe", "Prunella"], correct: 0 },
         { question: "Where in Philly did we have our first moment?", options: ["Beach", "Mall Arcade", "Morgan's Pier", "Barnes and Nobles"], correct: 2 },
         { question: "What did we eat at Redding Market first?", options: ["Philly Sammich", "Crepe", "Fish", "Bagel"], correct: 1 },
-        { question: "Where did we go eat after our first day of snowboarding?", options: ["Moes", "Chili's", "Wendy's", "Dominos"], correct: 0 },
-        { question: "Which movie did we watch together first?", options: ["Rab Ne Bana Di Jodi", "How to lose a guy in 10 days", "Hum Tum", "I hate Luv Story's"], correct: 0 }
+        { question: "Where did we go eat after our first day of snowboarding?", options: ["Moes", "Chili's", "Wendy's", "Dominos"], correct: 0 }
     ];
 
     let currentQuestionIndex = 0;
 
     function startQuiz() {
-        valentineContainer.style.display = "none";
-        quizContainer.style.display = "flex";
-        loadQuestion();
+        valentineContainer.classList.add("fade-out");
+        setTimeout(() => {
+            valentineContainer.style.display = "none";
+            quizContainer.style.display = "flex";
+            heartContainer.style.display = "none"; // Stop hearts when quiz starts
+            loadQuestion();
+        }, 500);
     }
 
     function loadQuestion() {
@@ -185,23 +216,6 @@
         }
         document.body.style.backgroundImage = `url('${bgImages[currentQuestionIndex]}')`;
         questionText.innerText = questions[currentQuestionIndex].question;
-        optionsContainer.innerHTML = "";
-        questions[currentQuestionIndex].options.forEach((option, index) => {
-            const button = document.createElement("button");
-            button.classList.add("option");
-            button.innerText = option;
-            button.onclick = () => checkAnswer(index);
-            optionsContainer.appendChild(button);
-        });
-    }
-
-    function checkAnswer(selectedIndex) {
-        if (selectedIndex === questions[currentQuestionIndex].correct) {
-            currentQuestionIndex++;
-            loadQuestion();
-        } else {
-            alert("Oops! Try again 💔");
-        }
     }
 
     yesButton.addEventListener("click", startQuiz);
