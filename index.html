@@ -13,26 +13,6 @@
       transition: background-image 0.5s ease-in-out;
     }
 
-    .fade-in {
-      opacity: 0;
-      animation: fadeIn 0.5s ease-in forwards;
-    }
-
-    .fade-out {
-      opacity: 1;
-      animation: fadeOut 0.5s ease-out forwards;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; }
-      to { opacity: 1; }
-    }
-
-    @keyframes fadeOut {
-      from { opacity: 1; }
-      to { opacity: 0; }
-    }
-
     .hidden {
       display: none;
     }
@@ -121,7 +101,7 @@
 
   <!-- Quiz Container -->
   <div id="quiz-container" class="hidden flex items-center justify-center h-screen">
-    <div id="question-box" class="question-box fade-in">
+    <div id="question-box" class="question-box">
       <h2 id="question-text" class="text-2xl font-bold text-[#bd1e59]"></h2>
       <div id="options-container"></div>
     </div>
@@ -187,6 +167,7 @@
             return;
         }
         document.body.style.backgroundImage = `url('${bgImages[currentQuestionIndex]}')`;
+        questionBox.style.display = "block";
         questionText.innerText = questions[currentQuestionIndex].question;
         optionsContainer.innerHTML = "";
 
@@ -201,10 +182,10 @@
 
     function checkAnswer(selectedIndex) {
         if (selectedIndex === questions[currentQuestionIndex].correct) {
-            questionBox.style.opacity = "0";
+            questionBox.style.display = "none";
             setTimeout(() => {
                 currentQuestionIndex++;
-                questionBox.style.opacity = "1";
+                questionBox.style.display = "block";
                 loadQuestion();
             }, 2000);
         } else {
