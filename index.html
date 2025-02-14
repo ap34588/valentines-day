@@ -8,7 +8,7 @@
   <style>
     /* Default Background */
     body {
-      background: color (srgb red green blue) no-repeat center center fixed;
+      background: url('Images/image1.jpeg') no-repeat center center fixed;
       background-size: cover;
       transition: background-image 0.5s ease-in-out;
     }
@@ -37,7 +37,7 @@
       display: none;
     }
 
-    /* Centered Quiz Box */
+    /* Centered Quiz Box with Pink Border */
     .question-box {
       background-color: white;
       padding: 20px;
@@ -105,7 +105,7 @@
   <!-- Initial Valentine's Page -->
   <div id="valentine-container" class="flex flex-col items-center justify-center h-screen">
     <div class="flex flex-col items-center p-4">
-      <img id="imageDisplay" src="valentines-day.github.io/image1.gif" alt="Cute couple" class="rounded-md h-[300px]" style="object-fit: cover;" />
+      <img id="imageDisplay" src="image1.gif" alt="Cute couple" class="rounded-md h-[300px]" style="object-fit: cover;" />
       <h2 id="valentineQuestion" class="text-4xl font-bold italic text-[#bd1e59] my-4">Will you be my Valentine?</h2>
       <div class="flex gap-4 pt-[20px] items-center">
         <button id="yesButton" class="inline-flex items-center justify-center rounded-md text-[20px] font-medium bg-green-500 text-white px-4 py-2 hover:bg-green-400">
@@ -128,6 +128,7 @@
 
   <script>
     const yesButton = document.getElementById('yesButton');
+    const noButton = document.getElementById('noButton');
     const valentineContainer = document.getElementById('valentine-container');
     const quizContainer = document.getElementById('quiz-container');
     const questionBox = document.getElementById('question-box');
@@ -168,8 +169,6 @@
 
     function loadQuestion() {
         if (currentQuestionIndex >= questions.length) return;
-        
-        // Update background image for the current question
         document.body.style.backgroundImage = `url('${bgImages[currentQuestionIndex]}')`;
 
         const questionObj = questions[currentQuestionIndex];
@@ -205,6 +204,21 @@
             alert("Oops! Try again 💔");
         }
     }
+
+    function createHeart() {
+        const heart = document.createElement("div");
+        heart.classList.add("heart");
+        heart.innerHTML = "❤️";
+        heart.style.left = Math.random() * 100 + "vw";
+        heart.style.animationDuration = Math.random() * 2 + 3 + "s";
+        heartContainer.appendChild(heart);
+
+        setTimeout(() => {
+            heart.remove();
+        }, 5000);
+    }
+
+    setInterval(createHeart, 300);
 
     yesButton.addEventListener("click", startQuiz);
   </script>
