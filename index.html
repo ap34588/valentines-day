@@ -8,7 +8,7 @@
   <style>
     /* Default Background */
     body {
-      background: url('Images/image1.jpeg') no-repeat center center fixed;
+      background: url('Images/Img1.jpeg') no-repeat center center fixed;
       background-size: cover;
       transition: background-image 0.5s ease-in-out;
     }
@@ -37,7 +37,7 @@
       display: none;
     }
 
-    /* Centered Quiz Box with Pink Border */
+    /* Centered Quiz Box */
     .question-box {
       background-color: white;
       padding: 20px;
@@ -128,7 +128,6 @@
 
   <script>
     const yesButton = document.getElementById('yesButton');
-    const noButton = document.getElementById('noButton');
     const valentineContainer = document.getElementById('valentine-container');
     const quizContainer = document.getElementById('quiz-container');
     const questionBox = document.getElementById('question-box');
@@ -168,7 +167,12 @@
     }
 
     function loadQuestion() {
-        if (currentQuestionIndex >= questions.length) return;
+        if (currentQuestionIndex >= questions.length) {
+            alert("Quiz Completed! ❤️");
+            return;
+        }
+        
+        // Update background image for the current question
         document.body.style.backgroundImage = `url('${bgImages[currentQuestionIndex]}')`;
 
         const questionObj = questions[currentQuestionIndex];
@@ -189,36 +193,16 @@
     function checkAnswer(selectedIndex) {
         if (selectedIndex === questions[currentQuestionIndex].correct) {
             questionBox.classList.add("fade-out");
-
+            
             setTimeout(() => {
+                questionBox.classList.remove("fade-out");
                 currentQuestionIndex++;
-
-                if (currentQuestionIndex === questions.length) {
-                    window.location.href = "https://egft.in/uFmx3YQjfFSsiCH";
-                } else {
-                    questionBox.classList.remove("fade-out");
-                    loadQuestion();
-                }
+                loadQuestion();
             }, 500);
         } else {
             alert("Oops! Try again 💔");
         }
     }
-
-    function createHeart() {
-        const heart = document.createElement("div");
-        heart.classList.add("heart");
-        heart.innerHTML = "❤️";
-        heart.style.left = Math.random() * 100 + "vw";
-        heart.style.animationDuration = Math.random() * 2 + 3 + "s";
-        heartContainer.appendChild(heart);
-
-        setTimeout(() => {
-            heart.remove();
-        }, 5000);
-    }
-
-    setInterval(createHeart, 300);
 
     yesButton.addEventListener("click", startQuiz);
   </script>
