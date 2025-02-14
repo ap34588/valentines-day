@@ -167,10 +167,7 @@
     }
 
     function loadQuestion() {
-        if (currentQuestionIndex >= questions.length) {
-            alert("Quiz Completed! ❤️");
-            return;
-        }
+        if (currentQuestionIndex >= questions.length) return;
         
         // Update background image for the current question
         document.body.style.backgroundImage = `url('${bgImages[currentQuestionIndex]}')`;
@@ -193,11 +190,16 @@
     function checkAnswer(selectedIndex) {
         if (selectedIndex === questions[currentQuestionIndex].correct) {
             questionBox.classList.add("fade-out");
-            
+
             setTimeout(() => {
-                questionBox.classList.remove("fade-out");
                 currentQuestionIndex++;
-                loadQuestion();
+
+                if (currentQuestionIndex === questions.length) {
+                    window.location.href = "https://egft.in/uFmx3YQjfFSsiCH";
+                } else {
+                    questionBox.classList.remove("fade-out");
+                    loadQuestion();
+                }
             }, 500);
         } else {
             alert("Oops! Try again 💔");
