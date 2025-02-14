@@ -96,42 +96,6 @@
         opacity: 0;
       }
     }
-
-    /* Love Letter Styling */
-    #love-letter-container {
-      display: none;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
-      text-align: center;
-      background: url('Images/love_background.jpeg') no-repeat center center fixed;
-      background-size: cover;
-      color: white;
-    }
-
-    #love-letter {
-      background: rgba(255, 192, 203, 0.9);
-      padding: 20px;
-      border-radius: 10px;
-      max-width: 600px;
-      font-size: 20px;
-      box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
-    }
-
-    #continue-button {
-      margin-top: 20px;
-      background-color: #ff80ab;
-      padding: 10px 20px;
-      border-radius: 5px;
-      color: white;
-      text-decoration: none;
-      font-size: 18px;
-    }
-
-    #continue-button:hover {
-      background-color: #ff4081;
-    }
   </style>
 </head>
 <body>
@@ -147,6 +111,9 @@
         <button id="yesButton" class="inline-flex items-center justify-center rounded-md text-[20px] font-medium bg-green-500 text-white px-4 py-2 hover:bg-green-400">
           Yes
         </button>
+        <button id="noButton" class="inline-flex items-center justify-center rounded-md text-[20px] font-medium bg-red-500 text-white px-4 py-2 hover:bg-red-700">
+          No
+        </button>
       </div>
     </div>
   </div>
@@ -159,41 +126,35 @@
     </div>
   </div>
 
-  <!-- Love Letter Container -->
-  <div id="love-letter-container" class="hidden flex items-center justify-center">
-    <div id="love-letter">
-      <h2 class="text-3xl font-bold">Dear My Love,</h2>
-      <p class="mt-4">
-        Every moment with you has been magical. I cherish every memory we've made together, and I can’t wait for all the new ones ahead.
-      </p>
-      <p class="mt-4">
-        You are my greatest adventure, and I know we can make this work. ❤️
-      </p>
-      <a id="continue-button" href="https://egft.in/uFmx3YQjfFSsiCH">Continue</a>
-    </div>
-  </div>
-
   <script>
     const yesButton = document.getElementById('yesButton');
+    const noButton = document.getElementById('noButton');
     const valentineContainer = document.getElementById('valentine-container');
     const quizContainer = document.getElementById('quiz-container');
-    const loveLetterContainer = document.getElementById('love-letter-container');
+    const questionBox = document.getElementById('question-box');
     const questionText = document.getElementById('question-text');
     const optionsContainer = document.getElementById('options-container');
     const heartContainer = document.getElementById("heart-container");
 
+    // Background Images for Questions
     const bgImages = [
         "Img1.jpeg", "Img2.jpeg", "Img3.jpeg", "Img4.jpeg",
         "Img5.jpeg", "Img6.jpeg", "Img7.jpeg", "Img8.jpeg",
         "Img9.jpeg", "Img10.jpeg"
     ];
 
+    // Quiz Questions
     const questions = [
         { question: "Where did we first meet?", options: ["Philly", "D.C.", "Boston", "Chicago"], correct: 0 },
         { question: "Where did we eat first?", options: ["La Llorona", "Malooga's", "Walnut Cafe", "Prunella"], correct: 0 },
         { question: "Where in Philly did we have our first moment?", options: ["Beach", "Mall Arcade", "Morgan's Pier", "Barnes and Nobles"], correct: 2 },
         { question: "What did we eat at Redding Market first?", options: ["Philly Sammich", "Crepe", "Fish", "Bagel"], correct: 1 },
-        { question: "Where did we go eat after our first day of snowboarding?", options: ["Moes", "Chili's", "Wendy's", "Dominos"], correct: 0 }
+        { question: "Where did we go eat after our first day of snowboarding?", options: ["Moes", "Chili's", "Wendy's", "Dominos"], correct: 0 },
+        { question: "Which movie did we watch together first?", options: ["Rab Ne Bana Di Jodi", "How to lose a guy in 10 days", "Hum Tum", "I hate Luv Story's"], correct: 0 },
+        { question: "What arcade game did we play the most in Philly?", options: ["Bowling", "Hunting Season", "Dance Dance", "Soccer"], correct: 2 },
+        { question: "What bar did we go but forget to take a picture at?", options: ["Morgan's Pier", "Insomnia", "Barcade", "Barstool"], correct: 3 },
+        { question: "Where should we go on our next date?", options: ["Beach", "Mountains", "Disneyland", "City"], correct: 0 }, 
+        { question: "Do you like Aryan?", options: ["A lot a lot", "Yes", "A lot", "no:("], correct: 0 }
     ];
 
     let currentQuestionIndex = 0;
@@ -209,14 +170,57 @@
     }
 
     function loadQuestion() {
-        if (currentQuestionIndex >= questions.length) {
-            quizContainer.style.display = "none";
-            loveLetterContainer.style.display = "flex";
-            return;
-        }
+        if (currentQuestionIndex >= questions.length) return;
         document.body.style.backgroundImage = `url('${bgImages[currentQuestionIndex]}')`;
-        questionText.innerText = questions[currentQuestionIndex].question;
+
+        const questionObj = questions[currentQuestionIndex];
+        questionText.innerText = questionObj.question;
+        optionsContainer.innerHTML = "";
+
+        questionObj.options.forEach((option, index) => {
+            const button = document.createElement("button");
+            button.classList.add("option");
+            button.innerText = option;
+            button.onclick = () => checkAnswer(index);
+            optionsContainer.appendChild(button);
+        });
+
+        questionBox.classList.add("fade-in");
     }
+
+    function checkAnswer(selectedIndex) {
+        if (selectedIndex === questions[currentQuestionIndex].correct) {
+            questionBox.classList.add("fade-out");
+
+            setTimeout(() => {
+                currentQuestionIndex++;
+
+                if (currentQuestionIndex === questions.length) {
+                    window.location.href = "https://egft.in/uFmx3YQjfFSsiCH";
+                } else {
+                    questionBox.classList.remove("fade-out");
+                    loadQuestion();
+                }
+            }, 500);
+        } else {
+            alert("Oops! Try again 💔");
+        }
+    }
+
+    function createHeart() {
+        const heart = document.createElement("div");
+        heart.classList.add("heart");
+        heart.innerHTML = "❤️";
+        heart.style.left = Math.random() * 100 + "vw";
+        heart.style.animationDuration = Math.random() * 2 + 3 + "s";
+        heartContainer.appendChild(heart);
+
+        setTimeout(() => {
+            heart.remove();
+        }, 5000);
+    }
+
+    setInterval(createHeart, 300);
 
     yesButton.addEventListener("click", startQuiz);
   </script>
