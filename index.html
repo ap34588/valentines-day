@@ -8,7 +8,7 @@
   <style>
     /* Default Background */
     body {
-      background: url('Images/image1.jpeg') no-repeat center center fixed;
+      background: url('image1.gif') no-repeat center center fixed;
       background-size: cover;
       transition: background-image 0.5s ease-in-out;
     }
@@ -37,14 +37,14 @@
       display: none;
     }
 
-    /* Centered Quiz Box with Pink Border */
+    /* Centered Quiz Box */
     .question-box {
       background-color: white;
       padding: 20px;
       border-radius: 10px;
       box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
       text-align: center;
-      width: 80%;
+      width: 90%;
       max-width: 500px;
       margin: auto;
       border: 8px solid #ff80ab;
@@ -76,6 +76,7 @@
       height: 100vh;
       overflow: hidden;
       pointer-events: none;
+      z-index: 0;
     }
 
     .heart {
@@ -105,8 +106,8 @@
   <!-- Initial Valentine's Page -->
   <div id="valentine-container" class="flex flex-col items-center justify-center h-screen">
     <div class="flex flex-col items-center p-4">
-      <img id="imageDisplay" src="Images/image1.gif" alt="Cute couple" class="rounded-md h-[300px]" style="object-fit: cover;" />
-      <h2 id="valentineQuestion" class="text-4xl font-bold italic text-[#bd1e59] my-4">Will you be my Valentine?</h2>
+      <img id="imageDisplay" src="image1.gif" alt="Cute couple" class="rounded-md h-[300px] max-w-full" style="object-fit: cover;" />
+      <h2 id="valentineQuestion" class="text-4xl font-bold italic text-[#bd1e59] my-4 text-center">Will you be my Valentine?</h2>
       <div class="flex gap-4 pt-[20px] items-center">
         <button id="yesButton" class="inline-flex items-center justify-center rounded-md text-[20px] font-medium bg-green-500 text-white px-4 py-2 hover:bg-green-400">
           Yes
@@ -128,41 +129,37 @@
 
   <script>
     const yesButton = document.getElementById('yesButton');
-    const noButton = document.getElementById('noButton');
     const valentineContainer = document.getElementById('valentine-container');
     const quizContainer = document.getElementById('quiz-container');
-    const questionBox = document.getElementById('question-box');
     const questionText = document.getElementById('question-text');
     const optionsContainer = document.getElementById('options-container');
     const heartContainer = document.getElementById("heart-container");
 
-    // Background Images for Questions
     const bgImages = [
-        "Images/Img1.jpeg", "Images/Img2.jpeg", "Images/Img3.jpeg", "Images/Img4.jpeg",
-        "Images/Img5.jpeg", "Images/Img6.jpeg", "Images/Img7.jpeg", "Images/Img8.jpeg",
-        "Images/Img9.jpeg", "Images/Img10.jpeg"
+        "Img1.jpeg", "Img2.jpeg", "Img3.jpeg", "Img4.jpeg",
+        "Img5.jpeg", "Img6.jpeg", "Img7.jpeg", "Img8.jpeg",
+        "Img9.jpeg", "Img10.jpeg"
     ];
 
-    // Quiz Questions
     const questions = [
-        { question: "What is my favorite color right now?", options: ["Red", "Blue", "Green", "Yellow"], correct: 2 },
         { question: "Where did we first meet?", options: ["Philly", "D.C.", "Boston", "Chicago"], correct: 0 },
-        { question: "What is my favorite ice cream flavor?", options: ["Vanilla", "Chocolate", "Caramel", "Mint"], correct: 1 },
-        { question: "Which pet do I love the most?", options: ["Dog", "Cat", "Rabbit", "Parrot"], correct: 0 },
-        { question: "What’s my dream house?", options: ["Beach", "Mountain", "Lake", "City"], correct: 2 },
-        { question: "What’s my favorite music genre?", options: ["Pop", "Rap", "Desi", "Rock"], correct: 2 },
-        { question: "Where should we go on our next date?", options: ["Beach", "Mountains", "Disneyland", "City"], correct: 0 },
+        { question: "Where did we eat first?", options: ["La Llorona", "Malooga's", "Walnut Cafe", "Prunella"], correct: 0 },
+        { question: "Where in Philly did we have our first moment?", options: ["Beach", "Mall Arcade", "Morgan's Pier", "Barnes and Nobles"], correct: 2 },
+        { question: "What did we eat at Redding Market first?", options: ["Philly Sammich", "Crepe", "Fish", "Bagel"], correct: 1 },
+        { question: "Where did we go eat after our first day of snowboarding?", options: ["Moes", "Chili's", "Wendy's", "Dominos"], correct: 0 },
+        { question: "Which movie did we watch together first?", options: ["Rab Ne Bana Di Jodi", "How to lose a guy in 10 days", "Hum Tum", "I hate Luv Story's"], correct: 0 },
+        { question: "What arcade game did we play the most in Philly?", options: ["Bowling", "Hunting Season", "Dance Dance", "Soccer"], correct: 2 },
+        { question: "What bar did we go but forget to take a picture at?", options: ["Morgan's Pier", "Insomnia", "Barcade", "Barstool"], correct: 3 },
+        { question: "Where should we go on our next date?", options: ["Beach", "Mountains", "Disneyland", "City"], correct: 0 }, 
         { question: "Do you like Aryan?", options: ["A lot a lot", "Yes", "A lot", "no:("], correct: 0 }
     ];
-
-    let currentQuestionIndex = 0;
 
     function startQuiz() {
         valentineContainer.classList.add("fade-out");
         setTimeout(() => {
             valentineContainer.style.display = "none";
             quizContainer.style.display = "flex";
-            heartContainer.style.display = "none"; // Stop hearts when quiz starts
+            heartContainer.style.display = "none";
             loadQuestion();
         }, 500);
     }
@@ -170,55 +167,16 @@
     function loadQuestion() {
         if (currentQuestionIndex >= questions.length) return;
         document.body.style.backgroundImage = `url('${bgImages[currentQuestionIndex]}')`;
-
-        const questionObj = questions[currentQuestionIndex];
-        questionText.innerText = questionObj.question;
+        questionText.innerText = questions[currentQuestionIndex].question;
         optionsContainer.innerHTML = "";
-
-        questionObj.options.forEach((option, index) => {
+        questions[currentQuestionIndex].options.forEach((option, index) => {
             const button = document.createElement("button");
             button.classList.add("option");
             button.innerText = option;
             button.onclick = () => checkAnswer(index);
             optionsContainer.appendChild(button);
         });
-
-        questionBox.classList.add("fade-in");
     }
-
-    function checkAnswer(selectedIndex) {
-        if (selectedIndex === questions[currentQuestionIndex].correct) {
-            questionBox.classList.add("fade-out");
-
-            setTimeout(() => {
-                currentQuestionIndex++;
-
-                if (currentQuestionIndex === questions.length) {
-                    window.location.href = "https://egft.in/uFmx3YQjfFSsiCH";
-                } else {
-                    questionBox.classList.remove("fade-out");
-                    loadQuestion();
-                }
-            }, 500);
-        } else {
-            alert("Oops! Try again 💔");
-        }
-    }
-
-    function createHeart() {
-        const heart = document.createElement("div");
-        heart.classList.add("heart");
-        heart.innerHTML = "❤️";
-        heart.style.left = Math.random() * 100 + "vw";
-        heart.style.animationDuration = Math.random() * 2 + 3 + "s";
-        heartContainer.appendChild(heart);
-
-        setTimeout(() => {
-            heart.remove();
-        }, 5000);
-    }
-
-    setInterval(createHeart, 300);
 
     yesButton.addEventListener("click", startQuiz);
   </script>
