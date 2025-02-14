@@ -8,7 +8,7 @@
   <style>
     /* Default Background */
     body {
-      background: color(srgb red green blue) no-repeat center center fixed;
+      background: color (srgb red green blue) no-repeat center center fixed;
       background-size: cover;
       transition: background-image 0.5s ease-in-out;
     }
@@ -109,7 +109,7 @@
       <img id="imageDisplay" src="image1.gif" alt="Cute couple" class="rounded-md h-[300px] max-w-full" style="object-fit: cover;" />
       <h2 id="valentineQuestion" class="text-4xl font-bold italic text-[#bd1e59] my-4 text-center">Will you be my Valentine?</h2>
       <div class="flex gap-4 pt-[20px] items-center">
-        <button id="yesButton" class="inline-flex items-center justify-center rounded-md text-[20px] font-medium bg-green-500 text-white px-4 py-2 hover:bg-green-400">
+        <button id="yesButton" class="inline-flex items-center justify-center rounded-md text-[20px] font-medium bg-green-500 hover:bg-green-400 text-white px-4 py-2">
           Yes
         </button>
         <button id="noButton" class="inline-flex items-center justify-center rounded-md text-[20px] font-medium bg-red-500 text-white px-4 py-2 hover:bg-red-700">
@@ -155,27 +155,28 @@
     ];
 
     function startQuiz() {
-        valentineContainer.classList.add("fade-out");
-        setTimeout(() => {
-            valentineContainer.style.display = "none";
-            quizContainer.style.display = "flex";
-            heartContainer.style.display = "none";
-            loadQuestion();
-        }, 500);
+      valentineContainer.classList.add("hidden");
+      quizContainer.classList.remove("hidden");
+      loadQuestion(0);
     }
 
-    function loadQuestion() {
-        if (currentQuestionIndex >= questions.length) return;
-        document.body.style.backgroundImage = `url('${bgImages[currentQuestionIndex]}')`;
-        questionText.innerText = questions[currentQuestionIndex].question;
-        optionsContainer.innerHTML = "";
-        questions[currentQuestionIndex].options.forEach((option, index) => {
-            const button = document.createElement("button");
-            button.classList.add("option");
-            button.innerText = option;
-            button.onclick = () => checkAnswer(index);
-            optionsContainer.appendChild(button);
-        });
+    function loadQuestion(index) {
+      if (index >= questions.length) {
+        alert("Quiz Completed! ❤️");
+        return;
+      }
+
+      const question = questions[index];
+      questionText.innerText = question.question;
+      optionsContainer.innerHTML = "";
+
+      question.options.forEach((option, i) => {
+        const button = document.createElement("button");
+        button.classList.add("option");
+        button.innerText = option;
+        button.addEventListener("click", () => loadQuestion(index + 1));
+        optionsContainer.appendChild(button);
+      });
     }
 
     yesButton.addEventListener("click", startQuiz);
