@@ -75,7 +75,7 @@
       justify-content: center;
       height: 100vh;
       text-align: center;
-      background: url('Images/love_background.jpeg') no-repeat center center fixed;
+      background: url('love_background.jpeg') no-repeat center center fixed;
       background-size: cover;
       color: white;
     }
@@ -105,9 +105,6 @@
   </style>
 </head>
 <body>
-  <!-- Raining Hearts Effect -->
-  <div id="heart-container" class="heart-container"></div>
-
   <!-- Initial Valentine's Page -->
   <div id="valentine-container" class="flex flex-col items-center justify-center h-screen">
     <div class="flex flex-col items-center p-4">
@@ -137,13 +134,13 @@
     <div id="love-letter">
       <h2 class="text-3xl font-bold">Dear My Love,</h2>
       <p class="mt-4">
-        From the moment we met, my world has been filled with joy, laughter, and love. 
+        From the moment we met, I knew you were someone special and that you could make me happy. 
         Every memory we have made together is a piece of a beautiful story, and I can’t wait to create many more chapters with you.
-        You are the light of my life, my greatest adventure, and the love of my heart. ❤️
+        You are my greatest adventure Aashi and I know we can make this work. ❤️
       </p>
       <p class="mt-4">
-        I promise to cherish every moment with you, support your dreams, and love you endlessly.
-        Thank you for being the most wonderful person in my life. I love you more than words can say. 💕
+        I will always cherish every moment with you, support your dreams, and care for you endlessly.
+        Thank you for being such a wonderful person in my life. I like you more than you can imagine. 💕
       </p>
       <a id="continue-button" href="https://egft.in/uFmx3YQjfFSsiCH">Continue</a>
     </div>
@@ -169,34 +166,21 @@
         { question: "Where in Philly did we have our first moment?", options: ["Beach", "Mall Arcade", "Morgan's Pier", "Barnes and Nobles"], correct: 2 },
         { question: "What did we eat at Redding Market first?", options: ["Philly Sammich", "Crepe", "Fish", "Bagel"], correct: 1 },
         { question: "Where did we go eat after our first day of snowboarding?", options: ["Moes", "Chili's", "Wendy's", "Dominos"], correct: 0 },
-        { question: "Which movie did we watch together first?", options: ["Rab Ne Bana Di Jodi", "How to lose a guy in 10 days", "Hum Tum", "I hate Luv Story's"], correct: 0 }
+        { question: "Which movie did we watch together first?", options: ["Rab Ne Bana Di Jodi", "How to lose a guy in 10 days", "Hum Tum", "I hate Luv Story's"], correct: 0 },
+        { question: "What arcade game did we play the most in Philly?", options: ["Bowling", "Hunting Season", "Dance Dance", "Soccer"], correct: 2 },
+        { question: "What bar did we go but forget to take a picture at?", options: ["Morgan's Pier", "Insomnia", "Barcade", "Barstool"], correct: 3 },
+        { question: "Where should we go on our next date?", options: ["Beach", "Mountains", "Disneyland", "City"], correct: 0 }, 
+        { question: "Do you like Aryan?", options: ["A lot a lot", "Yes", "A lot", "no:("], correct: 0 }
     ];
 
     let currentQuestionIndex = 0;
-
-    function startQuiz() {
-        valentineContainer.style.display = "none";
-        quizContainer.style.display = "flex";
-        loadQuestion();
-    }
-
-    function loadQuestion() {
-        if (currentQuestionIndex >= questions.length) {
-            quizContainer.style.display = "none";
-            loveLetterContainer.style.display = "flex";
-            return;
+    function checkAnswer(selectedIndex) {
+        if (selectedIndex === questions[currentQuestionIndex].correct) {
+            currentQuestionIndex++;
+            loadQuestion();
+        } else {
+            alert("Oops! Try again 💔");
         }
-        document.body.style.backgroundImage = `url('${bgImages[currentQuestionIndex]}')`;
-        questionText.innerText = questions[currentQuestionIndex].question;
-        optionsContainer.innerHTML = "";
-
-        questions[currentQuestionIndex].options.forEach((option, index) => {
-            const button = document.createElement("button");
-            button.classList.add("option");
-            button.innerText = option;
-            button.onclick = () => checkAnswer(index);
-            optionsContainer.appendChild(button);
-        });
     }
 
     yesButton.addEventListener("click", startQuiz);
